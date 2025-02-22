@@ -17,6 +17,8 @@ phases:
       - rm -rf terraform  # Clean up any existing terraform directory
       - unzip -o terraform.zip  # Use -o to automatically overwrite files
       - chmod +x terraform  # Make sure the terraform binary is executable
+      - rm -rf /tmp/terraform  # Clean up any existing terraform directory in /tmp
+      - mkdir -p /tmp/terraform  # Ensure the /tmp/terraform directory exists
       - mv terraform /tmp/terraform/  # Move terraform binary to /tmp
       - export PATH=$PATH:/tmp  # Add terraform directory to PATH
       - terraform --version  # Verify terraform installation
