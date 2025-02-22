@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - pip install -r lambda/requirements.txt  # Install dependencies for Lambda
+      - apt-get install -y zip                 # Install zip for packaging Lambda
+      - terraform init                        # Initialize Terraform
+  build:
+    commands:
+      - zip -r lambda/email_sender.zip lambda/ # Package Lambda function
+      - terraform apply -auto-approve         # Apply Terraform configuration
+  post_build:
+    commands:
+      - echo "Build and deployment complete"
+artifacts:
+  files:
+    - lambda/email_sender.zip
+    - terraform/*
