@@ -1,0 +1,15 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore AWS configuration files
+*.tfstate
+*.tfstate.backup
+
+# Ignore sensitive files
+*.env
+terraform.tfvars
+
+# Ignore build output
+*.zip
