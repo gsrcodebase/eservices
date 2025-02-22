@@ -9,31 +9,19 @@ phases:
     runtime-versions:
       python: 3.12 
     commands:
-      - echo Installing Terraform
-      - echo "Checking available commands..."
-      - which zip  # Check if zip is available
-      - which apk  # Check if apk is installed
-      - which apt-get  # Check if apt-get is installed
-      - uname -m  # Check the architecture of the environment
-      - |
-        if [ "$(uname -m)" = "aarch64" ]; then
-          # Download the ARM version of Terraform if architecture is ARM
-          wget https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_arm64.zip -O terraform.zip
-        else
-          # Default to downloading the AMD64 version
-          wget https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip -O terraform.zip
-        fi
+      - echo Using Terraform
+      - wget https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip -O terraform.zip
       - ls -l terraform.zip  # Check the file size and make sure it was downloaded correctly
       - file terraform.zip  # Check the file type to verify it's a valid ZIP file
       - unzip -v terraform.zip  # Verbose unzip to check its contents before extraction
       - rm -rf terraform  # Clean up any existing terraform directory
       - unzip -o terraform.zip  # Use -o to automatically overwrite files
       - chmod +x terraform  # Make sure the terraform binary is executable
-      - rm -rf /tmp/terraform  # Clean up any existing terraform directory in /tmp
-      - mkdir -p /tmp/terraform  # Ensure the /tmp/terraform directory exists
-      - mv terraform /tmp/terraform/  # Move terraform binary to /tmp/terraform/
-      - export PATH=$PATH:/tmp/terraform  # Add terraform directory to PATH
-      - terraform --version  # Verify terraform installation    
+      - mv terraform /tmp/terraform/  # Move terraform binary to /tmp
+      - export PATH=$PATH:/tmp  # Add terraform directory to PATH
+      - terraform --version  # Verify terraform installation
+      - pip install -r lambda/requirements.txt  # Install Python dependencies for Lambda
+      - terraform init  # Initialize Terraform 
       - pip install -r lambda/requirements.txt  # Install Python dependencies for Lambda
       - apk add --no-cache zip  # Install zip using apk (for Alpine-based containers)
       - terraform init  # Initialize Terraform
