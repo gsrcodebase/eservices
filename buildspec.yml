@@ -14,11 +14,14 @@ phases:
       - ls -l terraform.zip  # Optional: Check if the file was downloaded correctly
       - rm -rf terraform
       - unzip -o terraform.zip  # '-o' flag forces overwrite without prompting
-      - mv terraform /usr/local/bin/
+      - mkdir -p /root/.local/bin  # Create a directory for terraform binary if it doesn't exist
+      - mv terraform /root/.local/bin/  # Move the terraform binary to a writable location
+      - export PATH=$PATH:/root/.local/bin  # Add the directory to PAT
       - terraform --version
       - pip install -r lambda/requirements.txt  # Install Python dependencies for Lambda
       - apt-get install -y zip  # Ensure zip is installed for packaging Lambda function
       - terraform init  # Initialize Terraform
+
 
   pre_build:
     commands:
