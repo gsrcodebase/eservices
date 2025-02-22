@@ -24,7 +24,7 @@ phases:
       - |
         # Retrieve the secret and parse the Token from the secret
         export GITHUB_TOKEN=$(aws secretsmanager get-secret-value --secret-id $GITHUB_SECRET --query 'SecretString' --output text | jq -r '.Token')
-        export GITHUB_USERNAME="your_github_username"  # If stored as an environment variable or hardcoded
+        export GITHUB_USERNAME="gsrcodebase"
         echo "Cloning repository using the PAT..."
 
         # Clone the repository using the GitHub PAT
