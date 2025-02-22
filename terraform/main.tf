@@ -1,13 +1,13 @@
 provider "aws" {
-  region = "us-east-1"  # Change to your AWS region
+  region = var.aws_region
 }
 
 resource "aws_lambda_function" "eServices_email_sender" {
   filename         = "lambda/email_sender.zip"
-  function_name    = "eServicesEmailSender"
+  function_name    = var.lambda_function_name
   role             = aws_iam_role.lambda_exec.arn
   handler          = "email_sender.lambda_handler"
-  runtime          = "python3.8"
+  runtime          = "python3.12"  # Specify Python 3.12 runtime
   source_code_hash = filebase64sha256("lambda/email_sender.zip")
 }
 
