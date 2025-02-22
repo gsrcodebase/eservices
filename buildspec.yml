@@ -12,6 +12,7 @@ phases:
       - echo Installing Terraform
       - curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip
       - ls -l terraform.zip  # Optional: Check if the file was downloaded correctly
+      - rm -rf terraform
       - unzip -o terraform.zip  # '-o' flag forces overwrite without prompting
       - mv terraform /usr/local/bin/
       - terraform --version
