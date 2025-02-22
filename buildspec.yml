@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    GITHUB_SECRET: "eservicesgithub"  # Correct secret name in Secrets Manager
+
 phases:
   install:
     runtime-versions:
@@ -13,6 +17,18 @@ phases:
       - pip install -r lambda/requirements.txt  # Install Python dependencies for Lambda
       - apt-get install -y zip  # Ensure zip is installed for packaging Lambda function
       - terraform init  # Initialize Terraform
+
+  pre_build:
+    commands:
+      - echo Retrieving GitHub PAT from Secrets Manager...
+      - |
+        # Retrieve the secret and parse the Token from the secret
+        export GITHUB_TOKEN=$(aws secretsmanager get-secret-value --secret-id $GITHUB_SECRET --query 'SecretString' --output text | jq -r '.Token')
+        export GITHUB_USERNAME="your_github_username"  # If stored as an environment variable or hardcoded
+        echo "Cloning repository using the PAT..."
+
+        # Clone the repository using the GitHub PAT
+        git clone https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/your_github_account/eservices.git
 
   build:
     commands:
