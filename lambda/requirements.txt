@@ -1,5 +1,2 @@
-aws_region          = "us-east-1"       # Set your AWS region here
-lambda_function_name = "eServicesEmailSenderProd"
-ses_sender_email    = "gsramadurai1@gmail.com"
-ses_recipient_email = "gramadurai01@gmail.com"
+boto3==1.26.0  # This version of boto3 is compatible with Python 3.12
 
