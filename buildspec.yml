@@ -9,13 +9,14 @@ phases:
     runtime-versions:
       python: 3.12 
     commands:
-      - echo Downloading Terraform
+      - echo Installing Terraform
       - curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip
       - ls -l terraform.zip  # Check if the file was downloaded correctly
-      - rm -rf terraform  # Remove any existing terraform file or directory
       - unzip terraform.zip  # Extract terraform.zip
+      - chmod +x terraform  # Make sure the terraform binary is executable
+      - ls -ltr terraform  # List the file permissions after chmod
       - mv terraform /tmp/terraform/  # Move the terraform binary to /tmp
-      - export PATH=$PATH:/tmp  # Add terraform directory to the PATH
+      - export PATH=$PATH:/tmp  # Add terraform directory to PATH
       - terraform --version  # Verify terraform installation
       - pip install -r lambda/requirements.txt  # Install Python dependencies for Lambda
       - apt-get install -y zip  # Ensure zip is installed for packaging Lambda function
