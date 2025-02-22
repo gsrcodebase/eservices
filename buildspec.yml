@@ -10,6 +10,10 @@ phases:
       python: 3.12 
     commands:
       - echo Installing Terraform
+      - echo "Checking available commands..."
+      - which zip  # Check if zip is available
+      - which apk  # Check if apk is installed
+      - which apt-get  # Check if apt-get is installed
       - uname -m  # Check the architecture of the environment
       - |
         if [ "$(uname -m)" = "aarch64" ]; then
