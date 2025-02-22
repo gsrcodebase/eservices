@@ -31,8 +31,9 @@ phases:
       - export PATH=$PATH:/tmp/terraform  # Add terraform directory to PATH
       - terraform --version  # Verify terraform installation    
       - pip install -r lambda/requirements.txt  # Install Python dependencies for Lambda
-      - apt-get install -y zip  # Ensure zip is installed for packaging Lambda function
+      - apk add --no-cache zip  # Install zip using apk (for Alpine-based containers)
       - terraform init  # Initialize Terraform
+
 
 
   pre_build:
