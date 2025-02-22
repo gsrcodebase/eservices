@@ -10,7 +10,7 @@ phases:
       python: 3.12 
     commands:
       - echo Installing Terraform
-      - curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip
+      - wget https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip -O terraform.zip
       - ls -l terraform.zip  # Check if the file was downloaded correctly
       - unzip terraform.zip  # Extract terraform.zip
       - chmod +x terraform  # Make sure the terraform binary is executable
