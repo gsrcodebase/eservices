@@ -3,19 +3,29 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.12
+      python: 3.12 
     commands:
-      - pip install -r lambda/requirements.txt  # Install dependencies for Lambda
-      - apt-get install -y zip                 # Install zip for packaging Lambda
-      - terraform init                        # Initialize Terraform
+      - echo Installing Terraform
+      - curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip
+      - unzip terraform.zip
+      - mv terraform /usr/local/bin/
+      - terraform --version
+      - pip install -r lambda/requirements.txt  # Install Python dependencies for Lambda
+      - apt-get install -y zip  # Ensure zip is installed for packaging Lambda function
+      - terraform init  # Initialize Terraform
+
   build:
     commands:
-      - zip -r lambda/email_sender.zip lambda/ # Package Lambda function
-      - terraform apply -auto-approve         # Apply Terraform configuration
+      - echo Building Lambda function and deploying infrastructure
+      - zip -r lambda/email_sender.zip lambda/  # Package Lambda function
+      - terraform plan -out=tfplan  # Plan Terraform deployment
+      - terraform apply -auto-approve  # Apply Terraform deployment
+
   post_build:
     commands:
       - echo "Build and deployment complete"
+
 artifacts:
   files:
-    - lambda/email_sender.zip
-    - terraform/*
+    - lambda/email_sender.zip  # Artifacts to be passed on for deployment
+    - terraform/*  # Include the terraform configuration in artifacts for later stages
