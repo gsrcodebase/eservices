@@ -1,0 +1,61 @@
+name: Build Lambda and Upload to S3
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Python environment
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
+
+      # Install dependencies (e.g., boto3)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install boto3
+
+      # Create a ZIP package for the Lambda function
+      - name: Package Lambda function
+        run: |
+          zip -r lambda/email_sender.zip lambda/
+
+      # Check if the S3 bucket exists, and create it if it doesn't
+      - name: Check if S3 bucket exists and create it if necessary
+        run: |
+          BUCKET_EXISTS=$(aws s3api head-bucket --bucket $S3_BUCKET_NAME 2>&1 || true)
+          if [[ $BUCKET_EXISTS == *"Not Found"* ]]; then
+            echo "Bucket does not exist. Creating bucket: $S3_BUCKET_NAME"
+            aws s3api create-bucket --bucket $S3_BUCKET_NAME --region $AWS_REGION --create-bucket-configuration LocationConstraint=$AWS_REGION
+          else
+            echo "Bucket $S3_BUCKET_NAME already exists."
+          fi
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+
+      # Upload the ZIP package to S3
+      - name: Upload Lambda ZIP to S3
+        run: |
+          aws s3 cp lambda/email_sender.zip s3://$S3_BUCKET_NAME/email_sender.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
